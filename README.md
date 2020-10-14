@@ -6,6 +6,19 @@ Projet réalisé par Charles Kempa, Thibaut Masnin et Thomas Dignoire.
 
 Programme qui trie les entrées d’un répertoire suivant différents critères. Ce programme est réalisé en SHELL.
 
+## Répartition des taches
+
+-R : Thibaut
+-d
+-n
+-s
+-m : thomas
+-l : thomas
+-e : thomas
+-t
+-p
+-g
+
 ## Liste des fonctionnalités
 
 * Affichage d'un répertoire.
