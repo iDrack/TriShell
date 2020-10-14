@@ -8,16 +8,16 @@ Programme qui trie les entrées d’un répertoire suivant différents critères
 
 ## Répartition des taches
 
--R : Thibaut
--d
--n
--s
--m : thomas
--l : thomas
--e : thomas
--t
--p
--g
+* -R : Thibaut
+* -d : 
+* -n : 
+* -s :
+* -m : Thomas
+* -l : Thomas
+* -e : Thomas
+* -t :
+* -p :
+* -g :
 
 ## Liste des fonctionnalités
 
