@@ -9,15 +9,15 @@ Programme qui trie les entrées d’un répertoire suivant différents critères
 ## Répartition des taches
 
 -R : Thibaut
--d
+-d : 
 -n : Charles
--s : Charles
--m : Thomas
--l : Thomas
--e : Thomas
--t
--p
--g
+-s : 
+-m : 
+-l : 
+-e : 
+-t :
+-p :
+-g :
 
 ## Liste des fonctionnalités
 
