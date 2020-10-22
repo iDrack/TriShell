@@ -8,6 +8,7 @@ Programme qui trie les entrées d’un répertoire suivant différents critères
 
 ## Répartition des taches
 
+<<<<<<< Updated upstream
 * -R : Thibaut
 * -d : 
 * -n : 
@@ -18,6 +19,18 @@ Programme qui trie les entrées d’un répertoire suivant différents critères
 * -t :
 * -p :
 * -g :
+=======
+-R : Thibaut
+-d
+-n : Charles
+-s : Charles
+-m : Thomas
+-l : Thomas
+-e : Thomas
+-t
+-p
+-g
+>>>>>>> Stashed changes
 
 ## Liste des fonctionnalités
 
