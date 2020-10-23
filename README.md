@@ -6,10 +6,10 @@ Projet réalisé par Charles Kempa, Thibaut Masnin et Thomas Dignoire.
 
 Programme qui trie les entrées d’un répertoire suivant différents critères. Ce programme est réalisé en SHELL.
 
-## Particularitees
+## Particularites
 
 Ce script n'utilise pas de liste, nous utilisons une chaine de characteres afin de simuler une liste.
-Chaque elements de cette "liste" est separer par un espace.
+Chaque element de cette "liste" est separee par un espace.
 Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 
 * ajout()
@@ -17,9 +17,7 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * taille_de()
 * afficher()
 
-# Travail colaboratif
-
-## Répartition des taches
+# Répartition des taches
 
 * -R : Thibaut
 * -d : Thomas
@@ -32,9 +30,7 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * -p :
 * -g :
 
-## Liste des fonctionnalités
+# Liste des fonctionnalités
 
 * Affichage d'un répertoire.
 * Option -R (Affichage d'un réprtoire, dont le nom est celui précisé par -R).
-
-## Liste des fonctionnalités non réalisées
