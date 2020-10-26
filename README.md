@@ -24,13 +24,16 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * -n : Charles
 * -s : 
 * -m : 
-* -l : 
+* -l : Thomas
 * -e : 
 * -t :
 * -p :
 * -g :
 
+[Trello](https://trello.com/b/2FQoZzJh/projet-shell)
+
 # Liste des fonctionnalités
 
 * Affichage d'un répertoire.
 * Option -R (Affichage d'un réprtoire, dont le nom est celui précisé par -R).
+* Option -d (Tri la liste du contenu du repertoire a afficher apr ordre decroissant).
