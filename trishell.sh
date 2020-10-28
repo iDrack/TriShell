@@ -55,7 +55,6 @@ function new_list {
     done
 }
 
-
 function arborescence {
     dossiers=''
     echo -e "\n$1:"
@@ -78,8 +77,6 @@ function arborescence {
 	cd ..
     done
 }
-
-
 
 #Ajout des elements a afficher dans la liste
 new_list $@
