@@ -1,29 +1,34 @@
 #!/bin/bash
 
 function ajout {
-    #Fonctions permettant d'operer sur notre liste
+    #Fonction permettant d'operer sur notre liste
     list=$list' '$1
 }
 
 function taille_de {
-    #Fonction retournant la taille de la liste passee en parametre
+    #Fonction retournant la taille de la liste passée en paramètres
     return $#
 }
 
 function afficher {
-    #Fonction permettant d'afficher la liste passee en parametre
-    for i in $@
+    #Affiche les fichiers present dans le répertoire
+    for i in *
     do
         if [ "$i" != "*" ]
 	then
 	    echo -ne "$i\t"
+    	    #Ajoute le fichier dans la liste si c'est un dossier et qu il y a -R en param
+	    if [ $# -gt 0 ] && [ $1 = "-R" ] && [ -d $i ]
+	    then
+		dossiers=$dossiers' '$i
+	    fi
 	fi
     done
     echo ""
 }
 
 function suppression {
-    #Premier parametre = elem a supp, second parametre = list a manipuler
+    #Premier paramètre = elem à supp, second paramètre = list à manipuler
     tmp=''
     for e in $@
         do
@@ -33,7 +38,7 @@ function suppression {
 }
 
 function inverser_ordre {
-    #Permet d inverser la liste d elements
+    #Permet d inverser la liste d éléments
     tmp=''
     for e in $@
         do
@@ -43,8 +48,8 @@ function inverser_ordre {
 }
 
 function new_list {
-    #Permet de creer une nouvelle liste et de gerer les options
-    #Il faudra passer en parametre les options passer lors de l'appel de la commande
+    #Permet de créer une nouvelle liste et de gérer les options
+    #Il faudra passer en paramètres les options passées lors de l appel de la commande
     list=*
     for e in $@
         do
@@ -55,21 +60,11 @@ function new_list {
     done
 }
 
+#Parcours l'arborescence récursivement
 function arborescence {
     dossiers=''
     echo -e "\n$1:"
-    for i in *
-    do
-	if [ "$i" != "*" ]
-        then
-            echo -ne "$i\t"
-            if [ -d "$i" ]
-            then
-		dossiers=$dossiers' '$i
-	    fi
-        fi
-    done
-    echo ""
+    afficher "-R"
     for j in $dossiers
     do
 	cd $j
@@ -78,14 +73,22 @@ function arborescence {
     done
 }
 
-#Ajout des elements a afficher dans la liste
-new_list $@
 
-#Voici la fonction principal
+#Va au repertoire entré en paramètres
+rep='.'
+for i in $@
+do
+    if [ -d "$i" ] && [ "$rep" = '.' ]
+    then
+	rep=$i
+    fi
+done
+cd $rep
+#Test si il y a -R en paramètres
 if [ "$1" = "-R" ]
 then
-    arborescence "."
+    arborescence $rep
 else
-    afficher $list
+    afficher
 fi
 
