@@ -60,7 +60,7 @@ function new_list {
     done
 }
 
-#Parcours l'arborescence récursivement
+#Parcours l'arborescence récursivement : -R.
 function arborescence {
     dossiers=''
     echo -e "\n$1:"
@@ -73,8 +73,7 @@ function arborescence {
     done
 }
 
-
-#Va au repertoire entré en paramètres
+#Va au repertoire entré en paramètres : -R.
 rep='.'
 for i in $@
 do
@@ -84,7 +83,11 @@ do
     fi
 done
 cd $rep
-#Test si il y a -R en paramètres
+
+#       trishell [-R] [-d] [-nsmletpg] rep
+# Ex :  trishell -R -d -pse /home
+
+#Test si il y a -R en paramètres.
 if [ "$1" = "-R" ]
 then
     arborescence $rep
