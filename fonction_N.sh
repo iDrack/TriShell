@@ -1,68 +1,82 @@
 #!/bin/bash
 
-function swap(){
-#   tmp=
-#   trier == "NON"
-#   Tant que trier == "NON"
-#    |   trier="OK"
-#    |   pour i allant du 1er elem au dernier elem
-#    |    |   si i!=$1 et i < tmp alors ..
-#    |    |    |   on échange les deux elem
-#    |    |    |   trier="NON"
-#    |    |   tmp = i
-    local tmp=
-    local tempo=
+#Fonction qui permet d'échange deux mot côte à côte (side by side).
+#Paramètre : la chaine à modifier (les deux mots à echanger étant déterminer dans la fonction qui l'appel).
+#Retourne la nouvelle chaine donc.
+function swapSideBySide(){
+    local p1=
+    local p2=
     local cmpt=0
-    local calcul=0
+    for i in $@ 
+    do
+        cmpt=`expr $cmpt + 1`
+        if [ "$i" == "$elem1" ] 
+        then
+            cmpt=`expr $cmpt - 1`
+            p1=${@:1:$cmpt}
+            cmpt=`expr $cmpt + 1`
+        fi
+        
+        if [ "$i" == "$elem2" ] 
+        then
+            cmpt=`expr $cmpt + 1`
+            p2=${@:$cmpt}
+            break
+        fi
+    done
+    #echo "p1 : $p1"
+    #echo "p2 : $p2"
+    echo "$p1 $elem2 $elem1 $p2"
+}
+
+#Fonction qui permet de tri la chaine passé en paramètre, en fonction des noms dans la chaine (ordre alphabétique).
+#Paramètre : la chaine à modifier (chaine contenant les noms de fichiers qui l'on doit trier par ordre alphabétique).
+#Retourne la nouvelle chaine, la chaine trier donc.
+function fct_n(){
+    local param="$@"
     local trier="NON"
+    local compteur=0
+    #Représente notre mot en $i-1, qui va être comparé avec $i.
+    local tmp=
+    #Nos mots à échanger.
+    local elem1=
+    local elem2=
+    
     while [ "$trier" == "NON" ] 
     do
         trier="OK"
-        for i in $@ 
+        compteur=0
+        tmp=
+        for i in $param
         do
-            cmpt=`expr $cmpt + 1`
-            if [ "$i" != "$1" ] && [ "$i" \< "$tmp" ] 
+            compteur=`expr $compteur + 1`
+            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
+            if [ $compteur -ge 2 ] && [ "$i" \< "$tmp" ] 
             then
-                tempo=${@:$cmpt:1}
-                #tempo puis tmp .. Comment modifier l'élément dans la chaine .. 
-                ${@:$cmpt:1}=$tmp
-                cmpt=`expr $cmpt - 1`
-                ${@:$cmpt:1}=$tempo
-                cmpt=`expr $cmpt + 1`
+                elem1="$tmp"
+                elem2="$i"
+                #On échange les deux dans la chaine.
+                param=$(swapSideBySide $param)
                 trier="NON"
+                break
             fi
             tmp=$i
         done
     done
+
+    echo $param
 }
 
-function fct_n(){
-    local tmp=
-    local newListe=
-    echo ""
-    for i in $@ 
-    do
-        if [ "$i" \< "$tmp" ] 
-        then
-            echo "'$i' < '$tmp'"
-            newListe="$i $newListe"
-        else
-            echo "'$i' > '$tmp'"
-            newListe="$newListe $i"
-        fi
-        tmp=$i
-    done
-
-    echo "$(swap $newListe)"
-}
-
+#Si on a bien le paramètre -n alors on fait le tri. PS : $1 n'est que temporaire, le temps de merge le tout.
 if [ "$1" = "-n" ] 
 then 
-    listeAPasser="Abc Daa Boc Adc Zen"
-    echo "Chaine initiale : '$listeAPasser'."
-    # On appel la fonction ..
-    nouvelleListe=$(fct_n $listeAPasser)
-    echo "Nouvelle liste : '$nouvelleListe'."
+    chaine="Az bd Aa Dbz Brout Test"
+    #chaine="az ad ae aa"
+
+    echo "Chaine avant l'appel : $chaine"
+    chaine=$(fct_n $chaine)
+    echo "Chaine après l'appel : $chaine"
 else 
     echo "Besoin du -n !"
+    echo "Juste un -n sans rien derriere .. ^^"
 fi
