@@ -1,27 +1,28 @@
 #!/bin/bash
 
-function ajout(){
+function ajout {
     #Fonctions permettant d'operer sur notre liste
     list=$list' '$1
 }
 
-function taille_de(){
+function taille_de {
     #Fonction retournant la taille de la liste passee en parametre
     return $#
 }
 
-function afficher(){
+function afficher {
     #Fonction permettant d'afficher la liste passee en parametre
-    echo -e ""
-    echo `pwd`:
     for i in $@
-        do
-        echo -ne "$i\t"
-        done
+    do
+        if [ "$i" != "*" ]
+	then
+	    echo -ne "$i\t"
+	fi
+    done
     echo ""
 }
 
-function suppression(){
+function suppression {
     #Premier parametre = elem a supp, second parametre = list a manipuler
     tmp=''
     for e in $@
@@ -31,8 +32,8 @@ function suppression(){
     list=$tmp
 }
 
-function inverser_ordre(){
-    #Permet d'inverser la liste d'elements
+function inverser_ordre {
+    #Permet d inverser la liste d elements
     tmp=''
     for e in $@
         do
@@ -41,7 +42,7 @@ function inverser_ordre(){
     list=$tmp
 }
 
-function new_list(){
+function new_list {
     #Permet de creer une nouvelle liste et de gerer les options
     #Il faudra passer en parametre les options passer lors de l'appel de la commande
     list=*
@@ -54,22 +55,40 @@ function new_list(){
     done
 }
 
+
+function arborescence {
+    dossiers=''
+    echo -e "\n$1:"
+    for i in *
+    do
+	if [ "$i" != "*" ]
+        then
+            echo -ne "$i\t"
+            if [ -d "$i" ]
+            then
+		dossiers=$dossiers' '$i
+	    fi
+        fi
+    done
+    echo ""
+    for j in $dossiers
+    do
+	cd $j
+	arborescence "$1/$j"
+	cd ..
+    done
+}
+
+
+
 #Ajout des elements a afficher dans la liste
 new_list $@
 
 #Voici la fonction principal
-afficher $list
 if [ "$1" = "-R" ]
 then
-    for i in *
-    do
-        if [ -d "$i" ]
-        then
-            cd $i
-            new_list $@ #On appel new_list afin de recuperer les fichiers du nouveau repertoie
-            afficher $list
-            cd ..
-        fi
-    done
+    arborescence "."
+else
+    afficher $list
 fi
 
