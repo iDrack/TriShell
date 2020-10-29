@@ -15,14 +15,14 @@ function afficher {
     for i in *
     do
         if [ "$i" != "*" ]
-	then
-	    echo -ne "$i\t"
-    	    #Ajoute le fichier dans la liste si c'est un dossier et qu il y a -R en param
-	    if [ $# -gt 0 ] && [ $1 = "-R" ] && [ -d $i ]
-	    then
-		dossiers=$dossiers' '$i
+        then
+            echo -ne "$i\t"
+            #Ajoute le fichier dans la liste si c'est un dossier et qu il y a -R en param
+            if [ $# -gt 0 ] && [ $1 = "-R" ] && [ -d $i ]
+            then
+                dossiers=$dossiers' '$i
+            fi
 	    fi
-	fi
     done
     echo ""
 }
@@ -31,9 +31,9 @@ function suppression {
     #Premier paramètre = elem à supp, second paramètre = list à manipuler
     tmp=''
     for e in $@
-        do
+    do
         if (test $e != $1);then  tmp=$tmp' '$e; fi
-        done
+    done
     list=$tmp
 }
 
@@ -41,9 +41,9 @@ function inverser_ordre {
     #Permet d inverser la liste d éléments
     tmp=''
     for e in $@
-        do
+    do
         tmp=$e' '$tmp
-        done
+    done
     list=$tmp
 }
 
@@ -67,9 +67,9 @@ function arborescence {
     afficher "-R"
     for j in $dossiers
     do
-	cd $j
-	arborescence "$1/$j"
-	cd ..
+        cd $j
+        arborescence "$1/$j"
+	    cd ..
     done
 }
 
@@ -79,7 +79,7 @@ for i in $@
 do
     if [ -d "$i" ] && [ "$rep" = '.' ]
     then
-	rep=$i
+	    rep=$i
     fi
 done
 cd $rep
