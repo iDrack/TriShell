@@ -22,7 +22,7 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * -R : Thibaut
 * -d : Thomas
 * -n : Charles
-* -s : 
+* -s : Charles
 * -m : 
 * -l : Thomas
 * -e : 
@@ -37,3 +37,5 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * Affichage d'un répertoire.
 * Option -R (Affichage d'un réprtoire, dont le nom est celui précisé par -R).
 * Option -d (Tri la liste du contenu du repertoire a afficher apr ordre decroissant).
+* Option -n (Tri la liste du contenu du repertoire a afficher selon le nom des entrees)
+* Option -l (Tri la liste du contenu du repertoire a afficher selon le nombre de lignes de chaque fichier)
