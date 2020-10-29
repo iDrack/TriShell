@@ -1,4 +1,5 @@
 #!/bin/bash
+
 function ajout {
     #Fonction permettant d'operer sur notre liste
     list=$list' '$1
@@ -21,6 +22,10 @@ function afficher {
     if [ $options ] && [ $options == "-l" ]
     then 
         fct_l $list
+    fi
+    if [ $options ] && [ $options == "-e" ]
+    then 
+        fct_e $list
     fi
     #Verifie si on veut un affichage decroissant
     if [ $inverse ] && [ $inverse == "-d" ]
@@ -154,7 +159,7 @@ function fct_n(){
     list = $param
 }
 
-function fct_l(){
+function fct_e(){
     local param="$@"
     local trier="NON"
     local compteur=0
@@ -199,13 +204,79 @@ function fct_l(){
     list=$param
 }
 
-#Variable determinant si l'affichage doit etre decroissant
-inverse=$2
+function fct_e(){
+    local param="$@"
+    local trier="NON"
+    local compteur=0
+    #Représente notre mot en $i-1, qui va être comparé avec $i.
+    local tmp=
+    #Nos mots à échanger.
+    local elem1=
+    local elem2=
+    
+    while [ "$trier" == "NON" ] 
+    do
+        trier="OK"
+        compteur=0
+        tmp=
+        for i in $param
+        do
+            compteur=`expr $compteur + 1`
+            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
+            if [ $i ] && [ $tmp ]
+            then
+                if [ -d $i ]
+                    then testI=" "
+                    else testI="${i##*.}"
+                fi
+                if [ -d $tmp ]
+                    then testTmp=" "
+                    else testTmp="${tmp##*.}"
+                fi
+                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
+                then
+                    elem1="$tmp"
+                    elem2="$i"
+                    #On échange les deux dans la chaine.
+                    param=$(swapSideBySide $param)
+                    trier="NON"
+                    break
+                fi
+            fi
+            tmp=$i
+        done
+    done
+    list=$param
+}
+
+
 #Variable recuperant uniquement les options du programme
 #TODO fonction gerant les options du preogramme
-if [ $2 == "-d" ] 
-    then options=$3
-    else options=$2
+if [ $1 ]
+then
+    if [ $1 == "-R" ]
+    then
+        if [ $2 ]
+        then
+            if [ $2 == "-d" ]
+            then
+                inverse=$2
+                if [ $3 ]
+                then
+                    options=$3
+                fi
+            else
+                options=$2
+            fi 
+        fi
+    else
+        if [ $1 == "-d" ]
+        then    
+            inverse=$1
+        else
+            options=$1
+        fi
+    fi
 fi
 
 #Va au repertoire entré en paramètres : -R.

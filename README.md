@@ -39,3 +39,4 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * Option -d (Tri la liste du contenu du repertoire a afficher apr ordre decroissant).
 * Option -n (Tri la liste du contenu du repertoire a afficher selon le nom des entrees)
 * Option -l (Tri la liste du contenu du repertoire a afficher selon le nombre de lignes de chaque fichier)
+* Option -e (Tri la liste du contenu du repertoire a afficher selon l'extension des fichiers)
