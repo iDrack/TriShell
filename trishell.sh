@@ -249,7 +249,6 @@ function fct_e(){
     list=$param
 }
 
-
 #Variable recuperant uniquement les options du programme
 #TODO fonction gerant les options du preogramme
 if [ $1 ]
