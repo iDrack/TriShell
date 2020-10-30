@@ -159,7 +159,7 @@ function fct_n(){
     list = $param
 }
 
-function fct_e(){
+function fct_l(){
     local param="$@"
     local trier="NON"
     local compteur=0
@@ -181,12 +181,12 @@ function fct_e(){
             if [ $i ] && [ $tmp ]
             then
                 if [ -d $i ]
-                    then testI=0
-                    else testI=$(wc -l < $i)
+                    then local testI=0
+                    else local testI=$(wc -l < $i)
                 fi
                 if [ -d $tmp ]
-                    then testTmp=0
-                    else testTmp=$(wc -l < $tmp)
+                    then local testTmp=0
+                    else local testTmp=$(wc -l < $tmp)
                 fi
                 if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
                 then
@@ -226,12 +226,12 @@ function fct_e(){
             if [ $i ] && [ $tmp ]
             then
                 if [ -d $i ]
-                    then testI=" "
-                    else testI="${i##*.}"
+                    then local testI=" "
+                    else local testI="${i##*.}"
                 fi
                 if [ -d $tmp ]
-                    then testTmp=" "
-                    else testTmp="${tmp##*.}"
+                    then local testTmp=" "
+                    else local testTmp="${tmp##*.}"
                 fi
                 if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
                 then
