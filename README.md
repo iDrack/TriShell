@@ -23,12 +23,12 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * -d : Thomas
 * -n : Charles
 * -s : Charles
-* -m : 
+* -m : Thomas 
 * -l : Thomas
-* -e : 
-* -t :
-* -p :
-* -g :
+* -e : Thomas
+* -t : Charles
+* -p : Thomas
+* -g : Thomas
 
 [Trello](https://trello.com/b/2FQoZzJh/projet-shell)
 
@@ -40,3 +40,8 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * Option -n (Tri la liste du contenu du repertoire a afficher selon le nom des entrees)
 * Option -l (Tri la liste du contenu du repertoire a afficher selon le nombre de lignes de chaque fichier)
 * Option -e (Tri la liste du contenu du repertoire a afficher selon l'extension des fichiers)
+* Option -t (Tri la liste du contenu du repertoire a afficher selon le type de chaque fichier)
+* Option -s (Tri la liste du contenu du repertoire a afficher selon la taille de chaque ficheir)
+* Option -p (Tri la liste du contenu du repertoire a afficher selon le nom de l'utilisateur proprietaire de chaque fichier)
+* Option -g (Tri la liste du contenu du repertoire a afficher selon le nom du groupe proprietaire de chaque fichier)
+* Option -m (Tri la liste du contenu du repertoire a afficher selon la date de laderniere modification de chaque fichier)
