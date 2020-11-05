@@ -27,6 +27,18 @@ function afficher {
     then 
         fct_e $list
     fi
+    if [ $options ] && [ $options == "-p" ]
+    then
+	 fct_p $list
+    fi
+    if [ $options ] && [ $options == "-g" ]
+    then
+         fct_g $list
+    fi
+    if [ $options ] && [ $options == "-m" ]
+    then
+         fct_m $list
+    fi
     #Verifie si on veut un affichage decroissant
     if [ $inverse ] && [ $inverse == "-d" ]
     then 
@@ -249,8 +261,126 @@ function fct_e(){
     list=$param
 }
 
+function fct_p(){
+    local param="$@"
+    local trier="NON"
+    local compteur=0
+    #Représente notre mot en $i-1, qui va être comparé avec $i.
+    local tmp=
+    #Nos mots à échanger.
+    local elem1=
+    local elem2=
+    
+    while [ "$trier" == "NON" ] 
+    do
+        trier="OK"
+        compteur=0
+        tmp=
+        for i in $param
+        do
+            compteur=`expr $compteur + 1`
+            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
+            if [ $i ] && [ $tmp ]
+            then
+		local testI=$(stat -c "%U" $i)
+		local testTmp=$(stat -c "%U" $tmp)
+                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
+                then
+                    elem1="$tmp"
+                    elem2="$i"
+                    #On échange les deux dans la chaine.
+                    param=$(swapSideBySide $param)
+                    trier="NON"
+                    break
+                fi
+            fi
+            tmp=$i
+        done
+    done
+    list=$param
+}
+
+function fct_g(){
+    local param="$@"
+    local trier="NON"
+    local compteur=0
+    #Représente notre mot en $i-1, qui va être comparé avec $i.
+    local tmp=
+    #Nos mots à échanger.
+    local elem1=
+    local elem2=
+    
+    while [ "$trier" == "NON" ] 
+    do
+        trier="OK"
+        compteur=0
+        tmp=
+        for i in $param
+        do
+            compteur=`expr $compteur + 1`
+            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
+            if [ $i ] && [ $tmp ]
+            then
+		local testI=$(stat -c "%G" $i)
+		local testTmp=$(stat -c "%G" $tmp)
+                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
+                then
+                    elem1="$tmp"
+                    elem2="$i"
+                    #On échange les deux dans la chaine.
+                    param=$(swapSideBySide $param)
+                    trier="NON"
+                    break
+                fi
+            fi
+            tmp=$i
+        done
+    done
+    list=$param
+}
+
+function fct_m(){
+    local param="$@"
+    local trier="NON"
+    local compteur=0
+    #Représente notre mot en $i-1, qui va être comparé avec $i.
+    local tmp=
+    #Nos mots à échanger.
+    local elem1=
+    local elem2=
+    
+    while [ "$trier" == "NON" ] 
+    do
+        trier="OK"
+        compteur=0
+        tmp=
+        for i in $param
+        do
+            compteur=`expr $compteur + 1`
+            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
+            if [ $i ] && [ $tmp ]
+            then
+		local testI=$(stat -c "%y" $i)
+		local testTmp=$(stat -c "%y" $tmp)
+                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
+                then
+                    elem1="$tmp"
+                    elem2="$i"
+                    #On échange les deux dans la chaine.
+                    param=$(swapSideBySide $param)
+                    trier="NON"
+                    break
+                fi
+            fi
+            tmp=$i
+        done
+    done
+    list=$param
+}
+
+
 #Variable recuperant uniquement les options du programme
-#TODO fonction gerant les options du preogramme
+#TODO fonction gerant les options du programme
 if [ $1 ]
 then
     if [ $1 == "-R" ]
