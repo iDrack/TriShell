@@ -152,7 +152,7 @@ function sizeWithName(){
 
 #Reprise de code (via l'arborescence récursivement : -R) puis modifier.
 function sizeOfAll(){
-    dossiers=
+    local dossiers=
     sizeWithName "-s"
     for j in $dossiers
     do
