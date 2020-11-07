@@ -44,4 +44,4 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * Option -s (Tri la liste du contenu du repertoire a afficher selon la taille de chaque ficheir)
 * Option -p (Tri la liste du contenu du repertoire a afficher selon le nom de l'utilisateur proprietaire de chaque fichier)
 * Option -g (Tri la liste du contenu du repertoire a afficher selon le nom du groupe proprietaire de chaque fichier)
-* Option -m (Tri la liste du contenu du repertoire a afficher selon la date de laderniere modification de chaque fichier)
+* Option -m (Tri la liste du contenu du repertoire a afficher selon la date de la derniere modification de chaque fichier)
