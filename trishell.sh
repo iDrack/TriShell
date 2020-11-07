@@ -14,31 +14,7 @@ function afficher {
     #Affiche les fichiers present dans le répertoire
     list=*
     #Triage des elements du repertoire
-    #TODO fonction de gestion des options
-    if [ $options ] && [ $options == "-n" ]
-    then 
-        fct_n $list
-    fi
-    if [ $options ] && [ $options == "-l" ]
-    then 
-        fct_l $list
-    fi
-    if [ $options ] && [ $options == "-e" ]
-    then 
-        fct_e $list
-    fi
-    if [ $options ] && [ $options == "-p" ]
-    then
-	 fct_p $list
-    fi
-    if [ $options ] && [ $options == "-g" ]
-    then
-         fct_g $list
-    fi
-    if [ $options ] && [ $options == "-m" ]
-    then
-         fct_m $list
-    fi
+    trie $list    
     #Verifie si on veut un affichage decroissant
     if [ $inverse ] && [ $inverse == "-d" ]
     then 
@@ -134,10 +110,7 @@ function swapSideBySide(){
     echo "$p1 $elem2 $elem1 $p2"
 }
 
-#Fonction qui permet de tri la chaine passé en paramètre, en fonction des noms dans la chaine (ordre alphabétique).
-#Paramètre : la chaine à modifier (chaine contenant les noms de fichiers qui l'on doit trier par ordre alphabétique).
-#Retourne la nouvelle chaine, la chaine trier donc.
-function fct_n(){
+function trie(){
     local param="$@"
     local trier="NON"
     local compteur=0
@@ -146,6 +119,11 @@ function fct_n(){
     #Nos mots à échanger.
     local elem1=
     local elem2=
+    #Nos variables de comparaison
+    local testI
+    local testTmp
+    #Permet de determiner si on utilise une comparaison avec des entiers
+    local intCompa=0
     
     while [ "$trier" == "NON" ] 
     do
@@ -155,232 +133,117 @@ function fct_n(){
         for i in $param
         do
             compteur=`expr $compteur + 1`
-            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
-            if [ $compteur -ge 2 ] && [ "$i" \< "$tmp" ] 
-            then
-                elem1="$tmp"
-                elem2="$i"
-                #On échange les deux dans la chaine.
-                param=$(swapSideBySide $param)
-                trier="NON"
-                break
-            fi
-            tmp=$i
-        done
-    done
-    list = $param
-}
-
-function fct_l(){
-    local param="$@"
-    local trier="NON"
-    local compteur=0
-    #Représente notre mot en $i-1, qui va être comparé avec $i.
-    local tmp=
-    #Nos mots à échanger.
-    local elem1=
-    local elem2=
-    
-    while [ "$trier" == "NON" ] 
-    do
-        trier="OK"
-        compteur=0
-        tmp=
-        for i in $param
-        do
-            compteur=`expr $compteur + 1`
-            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
-            if [ $i ] && [ $tmp ]
-            then
-                if [ -d $i ]
-                    then local testI=0
-                    else local testI=$(wc -l < $i)
-                fi
-                if [ -d $tmp ]
-                    then local testTmp=0
-                    else local testTmp=$(wc -l < $tmp)
-                fi
-                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
+            #if [ $i ] && [ $tmp ]
+            #then
+                local j=1
+                if [ $options ]
                 then
-                    elem1="$tmp"
-                    elem2="$i"
-                    #On échange les deux dans la chaine.
-                    param=$(swapSideBySide $param)
-                    trier="NON"
-                    break
+                    local n=`expr length $options`
+                    if [ $j -le $n ]
+                    then
+                        comparer $j
+                    fi
                 fi
-            fi
+                if [ $intCompa == 1 ]
+                then
+                    if [ $compteur -ge 2 ] && [ "$testI" -lt "$testTmp" ] 
+                    then
+                        elem1="$tmp"
+                        elem2="$i"
+                        #On échange les deux dans la chaine.
+                        param=$(swapSideBySide $param)
+                        trier="NON"
+                        break
+                        j=1
+                    fi
+                else
+                    if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
+                    then
+                        elem1="$tmp"
+                        elem2="$i"
+                        #On échange les deux dans la chaine.
+                        param=$(swapSideBySide $param)
+                        trier="NON"
+                        break
+                        j=1
+                    fi
+                fi
+                
+            #fi
             tmp=$i
         done
     done
     list=$param
 }
 
-function fct_e(){
-    local param="$@"
-    local trier="NON"
-    local compteur=0
-    #Représente notre mot en $i-1, qui va être comparé avec $i.
-    local tmp=
-    #Nos mots à échanger.
-    local elem1=
-    local elem2=
-    
-    while [ "$trier" == "NON" ] 
-    do
-        trier="OK"
-        compteur=0
-        tmp=
-        for i in $param
-        do
-            compteur=`expr $compteur + 1`
-            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
-            if [ $i ] && [ $tmp ]
-            then
-                if [ -d $i ]
-                    then local testI=" "
-                    else local testI="${i##*.}"
+function comparer(){
+    #Cette fonction permet d'initialiser les variables a comparer avant de les echanger
+    #Param : $1 j
+    if [ $options ]
+    then    
+        if [ ${options:0:1} != "-" ]
+        then
+            echo "Err :${options:0:1} Element inconnu"
+            exit
+        fi
+        local tester=${options:$1:1}
+    else
+        local tester="n"
+    fi
+    if [ $i ] && [ $tmp ]
+    then
+        if [ $tester == "n" ]
+        then 
+            intCompa=0
+            testI=$i
+            testTmp=$tmp
+        fi
+        if [ $tester == "l" ]
+        then 
+            intCompa=1
+            if [ -d $i ]
+                then testI=0
+                else testI=$(wc -l < $i)
                 fi
-                if [ -d $tmp ]
-                    then local testTmp=" "
-                    else local testTmp="${tmp##*.}"
-                fi
-                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
-                then
-                    elem1="$tmp"
-                    elem2="$i"
-                    #On échange les deux dans la chaine.
-                    param=$(swapSideBySide $param)
-                    trier="NON"
-                    break
-                fi
+            if [ -d $tmp ]
+                then testTmp=0
+                else testTmp=$(wc -l < $tmp)
             fi
-            tmp=$i
-        done
-    done
-    list=$param
-}
-
-function fct_p(){
-    local param="$@"
-    local trier="NON"
-    local compteur=0
-    #Représente notre mot en $i-1, qui va être comparé avec $i.
-    local tmp=
-    #Nos mots à échanger.
-    local elem1=
-    local elem2=
-    
-    while [ "$trier" == "NON" ] 
-    do
-        trier="OK"
-        compteur=0
-        tmp=
-        for i in $param
-        do
-            compteur=`expr $compteur + 1`
-            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
-            if [ $i ] && [ $tmp ]
-            then
-		local testI=$(stat -c "%U" $i)
-		local testTmp=$(stat -c "%U" $tmp)
-                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
-                then
-                    elem1="$tmp"
-                    elem2="$i"
-                    #On échange les deux dans la chaine.
-                    param=$(swapSideBySide $param)
-                    trier="NON"
-                    break
-                fi
+        fi
+        if [ $tester == "e" ]
+        then 
+            intCompa=0
+            if [ -d $i ]
+                then testI=" "
+                else testI="${i##*.}"
             fi
-            tmp=$i
-        done
-    done
-    list=$param
+            if [ -d $tmp ]
+                then testTmp=" "
+                else testTmp="${tmp##*.}"
+            fi  
+        fi
+        if [ $tester == "p" ]
+        then
+            intCompa=0
+            testI=$(stat -c "%U" $i)
+            testTmp=$(stat -c "%U" $tmp)
+        fi
+        if [ $tester == "g" ]
+        then
+            intCompa=0
+            testI=$(stat -c "%G" $i)
+            testTmp=$(stat -c "%G" $tmp)
+        fi
+        if [ $tester == "m" ]
+        then
+            intCompa=0
+            testI=$(stat -c "%y" $i)
+            testTmp=$(stat -c "%y" $tmp)
+        fi
+    fi
 }
-
-function fct_g(){
-    local param="$@"
-    local trier="NON"
-    local compteur=0
-    #Représente notre mot en $i-1, qui va être comparé avec $i.
-    local tmp=
-    #Nos mots à échanger.
-    local elem1=
-    local elem2=
-    
-    while [ "$trier" == "NON" ] 
-    do
-        trier="OK"
-        compteur=0
-        tmp=
-        for i in $param
-        do
-            compteur=`expr $compteur + 1`
-            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
-            if [ $i ] && [ $tmp ]
-            then
-		local testI=$(stat -c "%G" $i)
-		local testTmp=$(stat -c "%G" $tmp)
-                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
-                then
-                    elem1="$tmp"
-                    elem2="$i"
-                    #On échange les deux dans la chaine.
-                    param=$(swapSideBySide $param)
-                    trier="NON"
-                    break
-                fi
-            fi
-            tmp=$i
-        done
-    done
-    list=$param
-}
-
-function fct_m(){
-    local param="$@"
-    local trier="NON"
-    local compteur=0
-    #Représente notre mot en $i-1, qui va être comparé avec $i.
-    local tmp=
-    #Nos mots à échanger.
-    local elem1=
-    local elem2=
-    
-    while [ "$trier" == "NON" ] 
-    do
-        trier="OK"
-        compteur=0
-        tmp=
-        for i in $param
-        do
-            compteur=`expr $compteur + 1`
-            #Si le compteur est sup ou égal à 2 et le mot courant < au mot d'avant alors on échange.
-            if [ $i ] && [ $tmp ]
-            then
-		local testI=$(stat -c "%y" $i)
-		local testTmp=$(stat -c "%y" $tmp)
-                if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
-                then
-                    elem1="$tmp"
-                    elem2="$i"
-                    #On échange les deux dans la chaine.
-                    param=$(swapSideBySide $param)
-                    trier="NON"
-                    break
-                fi
-            fi
-            tmp=$i
-        done
-    done
-    list=$param
-}
-
 
 #Variable recuperant uniquement les options du programme
-#TODO fonction gerant les options du programme
 if [ $1 ]
 then
     if [ $1 == "-R" ]
