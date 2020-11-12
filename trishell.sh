@@ -123,7 +123,7 @@ function trie(){
     local testI
     local testTmp
     #Permet de determiner si on utilise une comparaison avec des entiers
-    local intCompa=0
+    local flag=0
     
     while [ "$trier" == "NON" ] 
     do
@@ -144,29 +144,20 @@ function trie(){
                         comparer $j
                     fi
                 fi
-                if [ $intCompa == 1 ]
+                while [ $(($j+1)) -lt $n ] && [ $testI -lt $testTmp ]
+                do
+                    j=$(($j+1))
+                    comparer $j
+                done
+                if [ $flag -eq 1 ] && [ $compteur -ge 2 ] && [ $testI -lt $testTmp ] 
                 then
-                    if [ $compteur -ge 2 ] && [ "$testI" -lt "$testTmp" ] 
-                    then
-                        elem1="$tmp"
-                        elem2="$i"
-                        #On échange les deux dans la chaine.
-                        param=$(swapSideBySide $param)
-                        trier="NON"
-                        break
-                        j=1
-                    fi
-                else
-                    if [ $compteur -ge 2 ] && [ "$testI" \< "$testTmp" ] 
-                    then
-                        elem1="$tmp"
-                        elem2="$i"
-                        #On échange les deux dans la chaine.
-                        param=$(swapSideBySide $param)
-                        trier="NON"
-                        break
-                        j=1
-                    fi
+                    elem1="$tmp"
+                    elem2="$i"
+                    #On échange les deux dans la chaine.
+                    param=$(swapSideBySide $param)
+                    trier="NON"
+                    break
+                    j=1
                 fi
                 
             #fi
@@ -179,6 +170,7 @@ function trie(){
 function comparer(){
     #Cette fonction permet d'initialiser les variables a comparer avant de les echanger
     #Param : $1 j
+    flag=1
     if [ $options ]
     then    
         if [ ${options:0:1} != "-" ]
@@ -194,13 +186,18 @@ function comparer(){
     then
         if [ $tester == "n" ]
         then 
-            intCompa=0
-            testI=$i
-            testTmp=$tmp
+            if [ "$i" \< "$tmp" ]
+            then
+                testI=0
+                testTmp=1
+            else
+                testI=1
+                testTmp=0
+            fi
+
         fi
         if [ $tester == "l" ]
         then 
-            intCompa=1
             if [ -d $i ]
                 then testI=0
                 else testI=$(wc -l < $i)
@@ -212,7 +209,6 @@ function comparer(){
         fi
         if [ $tester == "e" ]
         then 
-            intCompa=0
             if [ -d $i ]
                 then testI=" "
                 else testI="${i##*.}"
@@ -221,24 +217,53 @@ function comparer(){
                 then testTmp=" "
                 else testTmp="${tmp##*.}"
             fi  
+            if [ "$testI" \< "$testTmp" ]
+            then
+                testI=0
+                testTmp=1
+            else
+                testI=1
+                testTmp=0
+            fi
         fi
         if [ $tester == "p" ]
         then
-            intCompa=0
             testI=$(stat -c "%U" $i)
             testTmp=$(stat -c "%U" $tmp)
+            if [ "$testI" \< "$testTmp" ]
+            then
+                testI=0
+                testTmp=1
+            else
+                testI=1
+                testTmp=0
+            fi
         fi
         if [ $tester == "g" ]
         then
-            intCompa=0
             testI=$(stat -c "%G" $i)
             testTmp=$(stat -c "%G" $tmp)
+            if [ "$testI" \< "$testTmp" ]
+            then
+                testI=0
+                testTmp=1
+            else
+                testI=1
+                testTmp=0
+            fi
         fi
         if [ $tester == "m" ]
         then
-            intCompa=0
             testI=$(stat -c "%y" $i)
             testTmp=$(stat -c "%y" $tmp)
+            if [ "$testI" \< "$testTmp" ]
+            then
+                testI=0
+                testTmp=1
+            else
+                testI=1
+                testTmp=0
+            fi
         fi
     fi
 }
