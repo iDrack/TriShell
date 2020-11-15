@@ -133,34 +133,35 @@ function trie(){
         for i in $param
         do
             compteur=`expr $compteur + 1`
-            #if [ $i ] && [ $tmp ]
-            #then
-                local j=1
-                if [ $options ]
+            #i permet de savoir l'option a utiliser durant la comparaison
+            local j=1
+            if [ $options ]
+            then
+                #n correspond au nombre d'options passee en parametre (incluant le -)
+                local n=`expr length $options`
+                if [ $j -le $n ]
                 then
-                    local n=`expr length $options`
-                    if [ $j -le $n ]
-                    then
-                        comparer $j
-                    fi
-                fi
-                while [ $(($j+1)) -lt $n ] && [ $testI -lt $testTmp ]
-                do
-                    j=$(($j+1))
+                    #Compare les entrees actuels selon l'option $j
                     comparer $j
-                done
-                if [ $flag -eq 1 ] && [ $compteur -ge 2 ] && [ $testI -lt $testTmp ] 
-                then
-                    elem1="$tmp"
-                    elem2="$i"
-                    #On échange les deux dans la chaine.
-                    param=$(swapSideBySide $param)
-                    trier="NON"
-                    break
-                    j=1
                 fi
-                
-            #fi
+            fi
+            #Tant que les entrees a comparer sont egal et qu'il reste des options a exploiter on les compare
+            while [ $(($j+1)) -lt $n ] && [ $testI -lt $testTmp ]
+            do
+                #permet de passer a l'option suivante
+                j=$(($j+1))
+                comparer $j
+            done
+            if [ $flag -eq 1 ] && [ $compteur -ge 2 ] && [ $testI -lt $testTmp ] 
+            then
+                elem1="$tmp"
+                elem2="$i"
+                #On échange les deux dans la chaine.
+                param=$(swapSideBySide $param)
+                trier="NON"
+                break
+                j=1
+            fi
             tmp=$i
         done
     done
@@ -168,18 +169,23 @@ function trie(){
 }
 
 function comparer(){
-    #Cette fonction permet d'initialiser les variables a comparer avant de les echanger
-    #Param : $1 j
-    flag=1
+    #Parametre : entier determinant l'option a utiliser afin de comparer les entrees
+    #Exemple: trishell.sh -el et comme parametre $1=2 alors on va comparer les entrees selon l'option l, le nombre de lignes que chaque entree comporte
+    #Apres avoir determiner le facteur de comparaison des entrees, on les compare puis on initialise testI a 0 et testTmp a 1 si $i < $tmp et vice versa
+    #TODO implementer un test verifiant que le char choisit pour la comparason soit legal
+    flag=1 #permet de determiner que l'on ait passer par la fonction comparer
     if [ $options ]
     then    
+    #Verifie que le debut de nos options commence bien par un -
         if [ ${options:0:1} != "-" ]
         then
             echo "Err :${options:0:1} Element inconnu"
             exit
         fi
+    #Initialise la variable tester au charactere a la position passer en parametre ($1)
         local tester=${options:$1:1}
     else
+    #Si notre variable $options n'existe pas alors on utiliser le tri de l'option n par defaut
         local tester="n"
     fi
     if [ $i ] && [ $tmp ]
@@ -197,7 +203,9 @@ function comparer(){
 
         fi
         if [ $tester == "l" ]
-        then 
+        #Compare les deux valeurs selon le nombre de lignes des entrees
+        then
+            #Pour l'option l, on ne fait pas le test testI < testTmp car dans l'algo principal on attend des entiers et ici, testI et testTmp sont des entiers
             if [ -d $i ]
                 then testI=0
                 else testI=$(wc -l < $i)
@@ -208,7 +216,9 @@ function comparer(){
             fi
         fi
         if [ $tester == "e" ]
+        #Tri suivant l'extentions des entrees 
         then 
+        #On init testI et testTmp pour la comparaison
             if [ -d $i ]
                 then testI=" "
                 else testI="${i##*.}"
@@ -217,8 +227,10 @@ function comparer(){
                 then testTmp=" "
                 else testTmp="${tmp##*.}"
             fi  
+            #On les compare
             if [ "$testI" \< "$testTmp" ]
             then
+                #on initialise testI et testTmp avec des entiers afin que l'algo principal les reconnaisse
                 testI=0
                 testTmp=1
             else
@@ -227,6 +239,7 @@ function comparer(){
             fi
         fi
         if [ $tester == "p" ]
+        #Tri suivant le nom du propietaire des entrees
         then
             testI=$(stat -c "%U" $i)
             testTmp=$(stat -c "%U" $tmp)
@@ -240,6 +253,7 @@ function comparer(){
             fi
         fi
         if [ $tester == "g" ]
+        #Tri suivant le groupe proprietaire des entrees
         then
             testI=$(stat -c "%G" $i)
             testTmp=$(stat -c "%G" $tmp)
@@ -253,6 +267,7 @@ function comparer(){
             fi
         fi
         if [ $tester == "m" ]
+        #Tri suivant la date de derniere modification des entrees
         then
             testI=$(stat -c "%y" $i)
             testTmp=$(stat -c "%y" $tmp)
