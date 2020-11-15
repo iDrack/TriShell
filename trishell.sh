@@ -124,7 +124,7 @@ function trie(){
     local testTmp
     #Permet de determiner si on utilise une comparaison avec des entiers
     local flag=0
-    
+    local n=0
     while [ "$trier" == "NON" ] 
     do
         trier="OK"
@@ -138,7 +138,7 @@ function trie(){
             if [ $options ]
             then
                 #n correspond au nombre d'options passee en parametre (incluant le -)
-                local n=`expr length $options`
+                n=`expr length $options`
                 if [ $j -le $n ]
                 then
                     #Compare les entrees actuels selon l'option $j
