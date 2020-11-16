@@ -5,6 +5,7 @@ Projet réalisé par Charles Kempa, Thibaut Masnin et Thomas Dignoire.
 ## Description
 
 Programme qui trie les entrées d’un répertoire suivant différents critères. Ce programme est réalisé en SHELL.
+
 Afin d'utiliser ce script comme commande, voici la démarche à suivre :
 
 * Mettez vous à l'endroit oú se situe trishell
