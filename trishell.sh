@@ -280,6 +280,11 @@ function comparer(){
                 testTmp=0
             fi
         fi
+        if [ $tester == "s" ]
+        then
+            testI=$(stat -c "%s" $i)
+            testTmp=$(stat -c "%s" $tmp)
+        fi
     fi
 }
 
