@@ -1,21 +1,22 @@
 #!/bin/bash
+# Projet réalisé par Charles Kempa, Thibaut Masnin et Thomas Dignoire.
 
+# Fonction permettant d'operer sur notre liste.
 function ajout {
-    #Fonction permettant d'operer sur notre liste
     list=$list' '$1
 }
 
+# Fonction retournant la taille de la liste passée en paramètres.
 function taille_de {
-    #Fonction retournant la taille de la liste passée en paramètres
     return $#
 }
 
+# Affiche les fichiers present dans le répertoire.
 function afficher {
-    #Affiche les fichiers present dans le répertoire
     list=*
-    #Triage des elements du repertoire
+    # Triage des elements du repertoire.
     trie $list    
-    #Verifie si on veut un affichage decroissant
+    # Verifie si on veut un affichage decroissant.
     if [ $inverse ] && [ $inverse == "-d" ]
     then 
         inverser_ordre $list 
@@ -25,7 +26,7 @@ function afficher {
         if [ "$i" != "*" ]
         then
             echo -ne "$i\t"
-            #Ajoute le fichier dans la liste si c'est un dossier et qu il y a -R en param
+            # Ajoute le fichier dans la liste si c'est un dossier et qu il y a '-R' en param. !
             if [ $# -gt 0 ] && [ $1 = "-R" ] && [ -d $i ]
             then
                 dossiers=$dossiers' '$i
@@ -35,8 +36,8 @@ function afficher {
     echo ""
 }
 
+# Premier paramètre = elem à sup., second paramètre = liste à manipuler.
 function suppression {
-    #Premier paramètre = elem à supp, second paramètre = list à manipuler
     tmp=''
     for e in $@
     do
@@ -45,8 +46,8 @@ function suppression {
     list=$tmp
 }
 
-function inverser_ordre {
-    #Permet d inverser la liste d éléments
+# Permet d'inverser la liste d'éléments.
+function inverser_ordre {    
     local tmp=''
     for e in $@
     do
@@ -55,9 +56,9 @@ function inverser_ordre {
     list=$tmp
 }
 
-function new_list {
-    #Permet de créer une nouvelle liste et de gérer les options
-    #Il faudra passer en paramètres les options passées lors de l appel de la commande
+# Permet de créer une nouvelle liste et de gérer les options.
+# Il faudra passer en paramètres les options passées lors de l'appel de la commande.
+function new_list {    
     list=*
     for e in $@
         do
@@ -105,8 +106,6 @@ function swapSideBySide(){
             break
         fi
     done
-    #echo "p1 : $p1"
-    #echo "p2 : $p2"
     echo "$p1 $elem2 $elem1 $p2"
 }
 
@@ -114,15 +113,15 @@ function trie(){
     local param="$@"
     local trier="NON"
     local compteur=0
-    #Représente notre mot en $i-1, qui va être comparé avec $i.
+    # Représente notre mot en $i-1, qui va être comparé avec $i.
     local tmp=
-    #Nos mots à échanger.
+    # Nos mots à échanger.
     local elem1=
     local elem2=
-    #Nos variables de comparaison
+    # Nos variables de comparaison.
     local testI
     local testTmp
-    #Permet de determiner si on utilise une comparaison avec des entiers
+    # Permet de determiner si on utilise une comparaison avec des entiers.
     local flag=0
     local n=0
     while [ "$trier" == "NON" ] 
@@ -133,22 +132,22 @@ function trie(){
         for i in $param
         do
             compteur=`expr $compteur + 1`
-            #i permet de savoir l'option a utiliser durant la comparaison
+            # Le 'i' permet de savoir l'option a utiliser durant la comparaison.
             local j=1
             if [ $options ]
             then
-                #n correspond au nombre d'options passee en parametre (incluant le -)
+                # Le 'n' correspond au nombre d'options passee en parametre (incluant le '-').
                 n=`expr length $options`
                 if [ $j -le $n ]
                 then
-                    #Compare les entrees actuels selon l'option $j
+                    # Compare les entrees actuels selon l'option $j.
                     comparer $j
                 fi
             fi
-            #Tant que les entrees a comparer sont egal et qu'il reste des options a exploiter on les compare
+            # Tant que les entrees a comparer sont egal et qu'il reste des options a exploiter on les compare.
             while [ $(($j+1)) -lt $n ] && [ $testI -lt $testTmp ]
             do
-                #permet de passer a l'option suivante
+                # Permet de passer a l'option suivante.
                 j=$(($j+1))
                 comparer $j
             done
@@ -156,7 +155,7 @@ function trie(){
             then
                 elem1="$tmp"
                 elem2="$i"
-                #On échange les deux dans la chaine.
+                # On échange les deux dans la chaine.
                 param=$(swapSideBySide $param)
                 trier="NON"
                 break
@@ -168,26 +167,34 @@ function trie(){
     list=$param
 }
 
+# Parametre : entier determinant l'option a utiliser afin de comparer les entrees.
+# Exemple: trishell.sh -el et comme parametre $1=2 alors on va comparer les entrees selon l'option l, le nombre de lignes que chaque entree comporte.
+# Apres avoir determiner le facteur de comparaison des entrees, on les compare puis on initialise testI a 0 et testTmp a 1 si $i < $tmp et vice versa.
+# TODO implementer un test verifiant que le char choisit pour la comparason soit legal.
 function comparer(){
-    #Parametre : entier determinant l'option a utiliser afin de comparer les entrees
-    #Exemple: trishell.sh -el et comme parametre $1=2 alors on va comparer les entrees selon l'option l, le nombre de lignes que chaque entree comporte
-    #Apres avoir determiner le facteur de comparaison des entrees, on les compare puis on initialise testI a 0 et testTmp a 1 si $i < $tmp et vice versa
-    #TODO implementer un test verifiant que le char choisit pour la comparason soit legal
-    flag=1 #permet de determiner que l'on ait passer par la fonction comparer
+    flag=1 # Il permet de determiner que l'on ait passer par la fonction comparer.
+
     if [ $options ]
     then    
-    #Verifie que le debut de nos options commence bien par un -
-        if [ ${options:0:1} != "-" ]
+        # Verifie que le debut de nos options commence bien par un '-'.
+        if [ ${options:0:1} != "-" ] 
         then
-            echo "Err :${options:0:1} Element inconnu"
+            echo "Err : ${options:0:1}, Element inconnu"
             exit
         fi
-    #Initialise la variable tester au charactere a la position passer en parametre ($1)
+        # Initialise la variable tester au charactere a la position passer en parametre ($1).
         local tester=${options:$1:1}
+        # Si cette variable ne correspond pas à une des options, on sort !
+        if [ $tester != "n" ] || [ $tester != "s" ] || [ $tester != "m" ] || [ $tester != "l" ] || [ $tester != "e" ] || [ $tester != "t" ] || [ $tester != "p" ] || [ $tester != "g" ] 
+        then
+            echo "Err : $tester, Element inconnu"
+            exit
+        fi
     else
-    #Si notre variable $options n'existe pas alors on utiliser le tri de l'option n par defaut
+        # Si notre variable $options n'existe pas alors on utiliser le tri de l'option n par defaut.
         local tester="n"
     fi
+
     if [ $i ] && [ $tmp ]
     then
         if [ $tester == "n" ]
@@ -202,10 +209,12 @@ function comparer(){
             fi
 
         fi
+
         if [ $tester == "l" ]
-        #Compare les deux valeurs selon le nombre de lignes des entrees
+        # Compare les deux valeurs selon le nombre de lignes des entrees.
         then
-            #Pour l'option l, on ne fait pas le test testI < testTmp car dans l'algo principal on attend des entiers et ici, testI et testTmp sont des entiers
+            # Pour l'option l, on ne fait pas le test testI < testTmp car dans l'algo principal on attend des entiers.
+            # Or, ici, testI et testTmp sont des entiers.
             if [ -d $i ]
                 then testI=0
                 else testI=$(wc -l < $i)
@@ -215,10 +224,11 @@ function comparer(){
                 else testTmp=$(wc -l < $tmp)
             fi
         fi
+
         if [ $tester == "e" ]
-        #Tri suivant l'extentions des entrees 
+        # Tri suivant l'extentions des entrees. 
         then 
-        #On init testI et testTmp pour la comparaison
+            # On init testI et testTmp pour la comparaison.
             if [ -d $i ]
                 then testI=" "
                 else testI="${i##*.}"
@@ -227,10 +237,10 @@ function comparer(){
                 then testTmp=" "
                 else testTmp="${tmp##*.}"
             fi  
-            #On les compare
+            # On les compare.
             if [ "$testI" \< "$testTmp" ]
             then
-                #on initialise testI et testTmp avec des entiers afin que l'algo principal les reconnaisse
+                # On initialise testI et testTmp avec des entiers afin que l'algo principal les reconnaisse.
                 testI=0
                 testTmp=1
             else
@@ -238,8 +248,9 @@ function comparer(){
                 testTmp=0
             fi
         fi
+
         if [ $tester == "p" ]
-        #Tri suivant le nom du propietaire des entrees
+        # Tri suivant le nom du propietaire des entrees.
         then
             testI=$(stat -c "%U" $i)
             testTmp=$(stat -c "%U" $tmp)
@@ -252,8 +263,9 @@ function comparer(){
                 testTmp=0
             fi
         fi
+
         if [ $tester == "g" ]
-        #Tri suivant le groupe proprietaire des entrees
+        # Tri suivant le groupe proprietaire des entrees.
         then
             testI=$(stat -c "%G" $i)
             testTmp=$(stat -c "%G" $tmp)
@@ -266,8 +278,9 @@ function comparer(){
                 testTmp=0
             fi
         fi
+
         if [ $tester == "m" ]
-        #Tri suivant la date de derniere modification des entrees
+        # Tri suivant la date de derniere modification des entrees.
         then
             testI=$(stat -c "%y" $i)
             testTmp=$(stat -c "%y" $tmp)
@@ -280,26 +293,31 @@ function comparer(){
                 testTmp=0
             fi
         fi
+
         if [ $tester == "s" ]
-        #Tri suivant la taille en bytes des entrees
+        # Tri suivant la taille en bytes des entrees.
         then
             testI=$(stat -c "%s" $i)
             testTmp=$(stat -c "%s" $tmp)
         fi
+
         if [ $tester == "t" ]
-        #Tri suivant le type des entrees
+        # Tri suivant le type des entrees.
         then
             testI=$(stat -c "%F" $i)
-            #Si le fichier tester est un fichier regulier vide ca reste un fichier regulier
+            # Si le fichier tester est un fichier regulier vide ca reste un fichier regulier.
             if [ "$testI" == "regular empty file" ]
             then
                 testI="regular file"
             fi
+
             testTmp=$(stat -c "%F" $tmp)
+
             if [ "$testTmp" == "regular empty file" ]
             then
                 testTmp="regular file"
             fi
+
             case "$testI" in "directory") testI=0;;
             "regular file") testI=1;;
             "symbolic link") testI=2;;
@@ -309,6 +327,7 @@ function comparer(){
             "socket") testI=6;;
             *);;
             esac
+
             case "$testTmp" in "directory") testTmp=0;;
             "regular file") testTmp=1;;
             "symbolic link") testTmp=2;;
@@ -322,7 +341,7 @@ function comparer(){
     fi
 }
 
-#Variable recuperant uniquement les options du programme
+# Variable recuperant uniquement les options du programme.
 if [ $1 ]
 then
     if [ $1 == "-R" ]
@@ -350,7 +369,7 @@ then
     fi
 fi
 
-#Va au repertoire entré en paramètres : -R.
+# Va au repertoire entré en paramètres : '-R'.
 rep='.'
 for i in $@
 do
