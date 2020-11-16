@@ -1,6 +1,8 @@
 #!/bin/bash
 # Projet réalisé par Charles Kempa, Thibaut Masnin et Thomas Dignoire.
 
+################################### Fonctions ####################################
+
 # Fonction permettant d'operer sur notre liste.
 function ajout {
     list=$list' '$1
@@ -340,6 +342,8 @@ function comparer(){
         fi
     fi
 }
+
+###################################### MAIN ######################################
 
 # Variable recuperant uniquement les options du programme.
 if [ $1 ]
