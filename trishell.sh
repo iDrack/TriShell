@@ -281,9 +281,43 @@ function comparer(){
             fi
         fi
         if [ $tester == "s" ]
+        #Tri suivant la taille en bytes des entrees
         then
             testI=$(stat -c "%s" $i)
             testTmp=$(stat -c "%s" $tmp)
+        fi
+        if [ $tester == "t" ]
+        #Tri suivant le type des entrees
+        then
+            testI=$(stat -c "%F" $i)
+            #Si le fichier tester est un fichier regulier vide ca reste un fichier regulier
+            if [ "$testI" == "regular empty file" ]
+            then
+                testI="regular file"
+            fi
+            testTmp=$(stat -c "%F" $tmp)
+            if [ "$testTmp" == "regular empty file" ]
+            then
+                testTmp="regular file"
+            fi
+            case "$testI" in "directory") testI=0;;
+            "regular file") testI=1;;
+            "symbolic link") testI=2;;
+            "block special file") testI=3;;
+            "character special file") testI=4;;
+            "fifo") testI=5;;
+            "socket") testI=6;;
+            *);;
+            esac
+            case "$testTmp" in "directory") testTmp=0;;
+            "regular file") testTmp=1;;
+            "symbolic link") testTmp=2;;
+            "block special file") testTmp=3;;
+            "character special file") testTmp=4;;
+            "fifo") testTmp=5;;
+            "socket") testTmp=6;;
+            *);;
+            esac
         fi
     fi
 }
