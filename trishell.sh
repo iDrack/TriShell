@@ -111,6 +111,7 @@ function swapSideBySide(){
     echo "$p1 $elem2 $elem1 $p2"
 }
 
+# Fonction regroupant tous les triés.
 function trie(){
     local param="$@"
     local trier="NON"
