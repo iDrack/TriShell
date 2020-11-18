@@ -27,7 +27,13 @@ function afficher {
     do
         if [ "$i" != "*" ]
         then
-            echo -ne "$i\t"
+            if [ -d $i ] 
+            then
+                echo -ne "\n ==> $i"
+            else 
+                echo -ne "\n --> $i"
+            fi
+            
             # Ajoute le fichier dans la liste si c'est un dossier et qu il y a '-R' en param. !
             if [ $# -gt 0 ] && [ $1 = "-R" ] && [ -d $i ]
             then
@@ -74,7 +80,12 @@ function new_list {
 #Parcours l'arborescence récursivement : -R.
 function arborescence {
     dossiers=''
-    echo -e "\n$1:"
+    if [ "$1" == "." ] 
+    then
+        echo -ne "\nRépertoire courant :"
+    else 
+        echo -ne "\nContenu de [$1] :"
+    fi
     afficher "-R"
     for j in $dossiers
     do
@@ -393,5 +404,6 @@ if [ "$1" = "-R" ]
 then
     arborescence $rep
 else
+    echo -ne "\nRépertoire courant : "
     afficher
 fi
