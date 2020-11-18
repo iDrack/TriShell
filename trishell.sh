@@ -84,7 +84,7 @@ function arborescence {
     then
         echo -ne "\nRépertoire courant :"
     else 
-        echo -ne "\nContenu de [$1] :"
+        echo -ne "\nContenu de [$1] : "
     fi
     afficher "-R"
     for j in $dossiers
@@ -193,166 +193,168 @@ function comparer(){
         # Verifie que le debut de nos options commence bien par un '-'.
         if [ ${options:0:1} != "-" ] 
         then
-            echo "Err : ${options:0:1}, Element inconnu"
+            echo -e "\033[31m [[Erreur : '${options:0:1}', Element inconnu]] \033[0m"
             exit
         fi
         # Initialise la variable tester au charactere a la position passer en parametre ($1).
         local tester=${options:$1:1}
-        # Si cette variable ne correspond pas à une des options, on sort !
-        if [ $tester != "n" ] || [ $tester != "s" ] || [ $tester != "m" ] || [ $tester != "l" ] || [ $tester != "e" ] || [ $tester != "t" ] || [ $tester != "p" ] || [ $tester != "g" ] 
-        then
-            echo "Err : $tester, Element inconnu"
-            exit
-        fi
     else
         # Si notre variable $options n'existe pas alors on utiliser le tri de l'option n par defaut.
         local tester="n"
     fi
 
-    if [ $i ] && [ $tmp ]
-    then
-        if [ $tester == "n" ]
-        then 
-            if [ "$i" \< "$tmp" ]
-            then
-                testI=0
-                testTmp=1
-            else
-                testI=1
-                testTmp=0
-            fi
-
-        fi
-
-        if [ $tester == "l" ]
-        # Compare les deux valeurs selon le nombre de lignes des entrees.
+    # Si cette variable est une option ok. Sinon si elle ne correspond pas à une des options, on sort !
+    if [ "$tester" = "n" ] || [ "$tester" = "s" ] || [ "$tester" = "m" ] || [ "$tester" = "l" ] || [ "$tester" = "e" ] || [ "$tester" = "t" ] || [ "$tester" = "p" ] || [ "$tester" = "g" ] 
+    then    
+        if [ $i ] && [ $tmp ]
         then
-            # Pour l'option l, on ne fait pas le test testI < testTmp car dans l'algo principal on attend des entiers.
-            # Or, ici, testI et testTmp sont des entiers.
-            if [ -d $i ]
-                then testI=0
-                else testI=$(wc -l < $i)
+            if [ $tester == "n" ]
+            then 
+                if [ "$i" \< "$tmp" ]
+                then
+                    testI=0
+                    testTmp=1
+                else
+                    testI=1
+                    testTmp=0
                 fi
-            if [ -d $tmp ]
-                then testTmp=0
-                else testTmp=$(wc -l < $tmp)
-            fi
-        fi
 
-        if [ $tester == "e" ]
-        # Tri suivant l'extentions des entrees. 
-        then 
-            # On init testI et testTmp pour la comparaison.
-            if [ -d $i ]
-                then testI=" "
-                else testI="${i##*.}"
             fi
-            if [ -d $tmp ]
-                then testTmp=" "
-                else testTmp="${tmp##*.}"
-            fi  
-            # On les compare.
-            if [ "$testI" \< "$testTmp" ]
+
+            if [ $tester == "l" ]
+            # Compare les deux valeurs selon le nombre de lignes des entrees.
             then
-                # On initialise testI et testTmp avec des entiers afin que l'algo principal les reconnaisse.
-                testI=0
-                testTmp=1
-            else
-                testI=1
-                testTmp=0
+                # Pour l'option l, on ne fait pas le test testI < testTmp car dans l'algo principal on attend des entiers.
+                # Or, ici, testI et testTmp sont des entiers.
+                if [ -d $i ]
+                    then testI=0
+                    else testI=$(wc -l < $i)
+                    fi
+                if [ -d $tmp ]
+                    then testTmp=0
+                    else testTmp=$(wc -l < $tmp)
+                fi
             fi
-        fi
 
-        if [ $tester == "p" ]
-        # Tri suivant le nom du propietaire des entrees.
-        then
-            testI=$(stat -c "%U" $i)
-            testTmp=$(stat -c "%U" $tmp)
-            if [ "$testI" \< "$testTmp" ]
+            if [ $tester == "e" ]
+            # Tri suivant l'extentions des entrees. 
+            then 
+                # On init testI et testTmp pour la comparaison.
+                if [ -d $i ]
+                    then testI=" "
+                    else testI="${i##*.}"
+                fi
+                if [ -d $tmp ]
+                    then testTmp=" "
+                    else testTmp="${tmp##*.}"
+                fi  
+                # On les compare.
+                if [ "$testI" \< "$testTmp" ]
+                then
+                    # On initialise testI et testTmp avec des entiers afin que l'algo principal les reconnaisse.
+                    testI=0
+                    testTmp=1
+                else
+                    testI=1
+                    testTmp=0
+                fi
+            fi
+
+            if [ $tester == "p" ]
+            # Tri suivant le nom du propietaire des entrees.
             then
-                testI=0
-                testTmp=1
-            else
-                testI=1
-                testTmp=0
+                testI=$(stat -c "%U" $i)
+                testTmp=$(stat -c "%U" $tmp)
+                if [ "$testI" \< "$testTmp" ]
+                then
+                    testI=0
+                    testTmp=1
+                else
+                    testI=1
+                    testTmp=0
+                fi
             fi
-        fi
 
-        if [ $tester == "g" ]
-        # Tri suivant le groupe proprietaire des entrees.
-        then
-            testI=$(stat -c "%G" $i)
-            testTmp=$(stat -c "%G" $tmp)
-            if [ "$testI" \< "$testTmp" ]
+            if [ $tester == "g" ]
+            # Tri suivant le groupe proprietaire des entrees.
             then
-                testI=0
-                testTmp=1
-            else
-                testI=1
-                testTmp=0
+                testI=$(stat -c "%G" $i)
+                testTmp=$(stat -c "%G" $tmp)
+                if [ "$testI" \< "$testTmp" ]
+                then
+                    testI=0
+                    testTmp=1
+                else
+                    testI=1
+                    testTmp=0
+                fi
             fi
-        fi
 
-        if [ $tester == "m" ]
-        # Tri suivant la date de derniere modification des entrees.
-        then
-            testI=$(stat -c "%y" $i)
-            testTmp=$(stat -c "%y" $tmp)
-            if [ "$testI" \< "$testTmp" ]
+            if [ $tester == "m" ]
+            # Tri suivant la date de derniere modification des entrees.
             then
-                testI=0
-                testTmp=1
-            else
-                testI=1
-                testTmp=0
+                testI=$(stat -c "%y" $i)
+                testTmp=$(stat -c "%y" $tmp)
+                if [ "$testI" \< "$testTmp" ]
+                then
+                    testI=0
+                    testTmp=1
+                else
+                    testI=1
+                    testTmp=0
+                fi
             fi
-        fi
 
-        if [ $tester == "s" ]
-        # Tri suivant la taille en bytes des entrees.
-        then
-            testI=$(stat -c "%s" $i)
-            testTmp=$(stat -c "%s" $tmp)
-        fi
-
-        if [ $tester == "t" ]
-        # Tri suivant le type des entrees.
-        then
-            testI=$(stat -c "%F" $i)
-            # Si le fichier tester est un fichier regulier vide ca reste un fichier regulier.
-            if [ "$testI" == "regular empty file" ]
+            if [ $tester == "s" ]
+            # Tri suivant la taille en bytes des entrees.
             then
-                testI="regular file"
+                testI=$(stat -c "%s" $i)
+                testTmp=$(stat -c "%s" $tmp)
             fi
 
-            testTmp=$(stat -c "%F" $tmp)
-
-            if [ "$testTmp" == "regular empty file" ]
+            if [ $tester == "t" ]
+            # Tri suivant le type des entrees.
             then
-                testTmp="regular file"
+                testI=$(stat -c "%F" $i)
+                # Si le fichier tester est un fichier regulier vide ca reste un fichier regulier.
+                if [ "$testI" == "regular empty file" ]
+                then
+                    testI="regular file"
+                fi
+
+                testTmp=$(stat -c "%F" $tmp)
+
+                if [ "$testTmp" == "regular empty file" ]
+                then
+                    testTmp="regular file"
+                fi
+
+                case "$testI" in "directory") testI=0;;
+                "regular file") testI=1;;
+                "symbolic link") testI=2;;
+                "block special file") testI=3;;
+                "character special file") testI=4;;
+                "fifo") testI=5;;
+                "socket") testI=6;;
+                *);;
+                esac
+
+                case "$testTmp" in "directory") testTmp=0;;
+                "regular file") testTmp=1;;
+                "symbolic link") testTmp=2;;
+                "block special file") testTmp=3;;
+                "character special file") testTmp=4;;
+                "fifo") testTmp=5;;
+                "socket") testTmp=6;;
+                *);;
+                esac
             fi
-
-            case "$testI" in "directory") testI=0;;
-            "regular file") testI=1;;
-            "symbolic link") testI=2;;
-            "block special file") testI=3;;
-            "character special file") testI=4;;
-            "fifo") testI=5;;
-            "socket") testI=6;;
-            *);;
-            esac
-
-            case "$testTmp" in "directory") testTmp=0;;
-            "regular file") testTmp=1;;
-            "symbolic link") testTmp=2;;
-            "block special file") testTmp=3;;
-            "character special file") testTmp=4;;
-            "fifo") testTmp=5;;
-            "socket") testTmp=6;;
-            *);;
-            esac
         fi
+    else
+        echo -e "\033[31m Erreur : '$tester' n'est pas une option valide ! \033[0m"
+        exit
     fi
+    
 }
 
 ###################################### MAIN ######################################
