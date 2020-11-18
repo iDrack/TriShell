@@ -369,12 +369,12 @@ then
             if [ $2 == "-d" ]
             then
                 inverse=$2
-                if [ $3 ]
+                if [ $3 ] && [ ${3:$1:1} == "-" ]
                 then
                     options=$3
                 fi
             else
-                options=$2
+                test '${2:$1:1} == "-"' && options=$2
             fi 
         fi
     else
@@ -382,7 +382,7 @@ then
         then    
             inverse=$1
         else
-            options=$1
+            test '${2:$1:1} == "-"' &&  options=$1
         fi
     fi
 fi
