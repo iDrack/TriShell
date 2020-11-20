@@ -29,9 +29,9 @@ function afficher {
         then
             if [ -d $i ] 
             then
-                echo -ne "\n ==> $i"
+                echo -ne "\033[33m \n ==> $i \033[0m"
             else 
-                echo -ne "\n --> $i"
+                echo -ne "\033[36m \n --> $i \033[0m"
             fi
             
             # Ajoute le fichier dans la liste si c'est un dossier et qu il y a '-R' en param. !
