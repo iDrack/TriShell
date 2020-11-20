@@ -37,7 +37,6 @@ Afin de manipuler cette "liste", il faut utiliser les fonctions suivantes:
 * -g : Thomas
 
 [Trello](https://trello.com/b/2FQoZzJh/projet-shell)
-
 [gitHub](https://github.com/iDrack/TriShell)
 
 # Liste des fonctionnalités
