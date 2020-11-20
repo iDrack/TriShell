@@ -3,17 +3,7 @@
 
 ################################### Fonctions ####################################
 
-# Fonction permettant d'operer sur notre liste.
-function ajout {
-    list=$list' '$1
-}
-
-# Fonction retournant la taille de la liste passée en paramètres.
-function taille_de {
-    return $#
-}
-
-# Affiche les fichiers present dans le répertoire.
+#Affiche les fichiers present dans le répertoire.
 function afficher {
     list=*
     # Triage des elements du repertoire.
@@ -44,16 +34,6 @@ function afficher {
     echo ""
 }
 
-# Premier paramètre = elem à sup., second paramètre = liste à manipuler.
-function suppression {
-    tmp=''
-    for e in $@
-    do
-        if (test $e != $1);then  tmp=$tmp' '$e; fi
-    done
-    list=$tmp
-}
-
 # Permet d'inverser la liste d'éléments.
 function inverser_ordre {    
     local tmp=''
@@ -62,19 +42,6 @@ function inverser_ordre {
         tmp=$e' '$tmp
     done
     list=$tmp
-}
-
-# Permet de créer une nouvelle liste et de gérer les options.
-# Il faudra passer en paramètres les options passées lors de l'appel de la commande.
-function new_list {    
-    list=*
-    for e in $@
-        do
-        if [ "$e" = "-d" ]
-            then
-            inverser_ordre $list
-        fi
-    done
 }
 
 #Parcours l'arborescence récursivement : -R.
@@ -122,7 +89,7 @@ function swapSideBySide(){
     echo "$p1 $elem2 $elem1 $p2"
 }
 
-# Fonction regroupant tous les triés.
+# Fonction regroupant tous les tries.
 function trie(){
     local param="$@"
     local trier="NON"
